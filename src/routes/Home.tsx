@@ -1,3 +1,55 @@
-export default function Home(){
-    return <span>Home</span>
+import { Grid } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { getClubs } from "../api";
+import Club from "../components/Club";
+import RoomSkeleton from "../components/RoomSkeleton";
+import { IClubList } from "../types";
+
+export default function Home() {
+  const { isLoading, data } = useQuery<IClubList[]>(["clubs"], getClubs);
+  return (
+    <Grid
+      mt={10}
+      px={{
+        base: 10,
+        lg: 19,
+      }}
+      columnGap={4}
+      rowGap={8}
+      templateColumns={{
+        sm: "1fr",
+        md: "1fr 1fr",
+        lg: "repeat(3, 1fr)",
+        xl: "repeat(4, 1fr)",
+        "2xl": "repeat(5, 1fr)",
+      }}
+    >
+      {isLoading ? (
+        <>
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+          <RoomSkeleton />
+        </>
+      ) : null}
+      {data?.map((club) => (
+        <Club
+          key={club.pk}
+          pk={club.pk}
+          imageUrl={club.photos[0].file}
+          name={club.name}
+          rating={club.rating}
+          city={club.city}
+          gu={club.gu}
+          price={club.price}
+        />
+      ))}
+    </Grid>
+  );
 }

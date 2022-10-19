@@ -38,16 +38,16 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                 }
               />
               <Input variant={"filled"} placeholder="Name" />
-              <InputGroup>
-                <InputLeftElement
-                  children={
-                    <Box color="gray.500">
-                      <FaEnvelope />
-                    </Box>
-                  }
-                />
-                <Input variant={"filled"} placeholder="Email" />
-              </InputGroup>
+            </InputGroup>
+            <InputGroup>
+              <InputLeftElement
+                children={
+                  <Box color="gray.500">
+                    <FaEnvelope />
+                  </Box>
+                }
+              />
+              <Input variant={"filled"} placeholder="Email" />
             </InputGroup>
             <InputGroup size={"md"}>
               <InputLeftElement
