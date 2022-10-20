@@ -2,20 +2,30 @@ import { FaMoon } from "react-icons/fa";
 import { TbLetterM } from "react-icons/tb";
 import { BsSunFill } from "react-icons/bs";
 import {
+  Avatar,
   Box,
   Button,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
+import useUser from "../lib/useUser";
+import { useQueryClient } from "@tanstack/react-query";
+import { LogOut } from "../api";
 
 export default function Header() {
+  const { userLoading, isLoggedIn, user } = useUser();
   const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
@@ -28,6 +38,23 @@ export default function Header() {
   } = useDisclosure();
   const { toggleColorMode } = useColorMode();
   const Icon = useColorModeValue(FaMoon, BsSunFill);
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const onLogOut = async () => {
+    const toastId = toast({
+      title: "Login out...",
+      description: "Sad to you go...",
+      status: "loading",
+      position: "bottom-right",
+    });
+    await LogOut();
+    queryClient.refetchQueries(["me"]);
+    toast.update(toastId, {
+      status: "success",
+      title: "Done!",
+      description: "See you later!",
+    });
+  };
   return (
     <Stack
       justifyContent={"space-between"}
@@ -50,12 +77,35 @@ export default function Header() {
         </Link>
       </Box>
       <HStack spacing={2}>
-        <Button onClick={onLoginOpen} colorScheme={"orange"} variant={"ghost"}>
-          Log in
-        </Button>
-        <Button onClick={onSignUpOpen} colorScheme={"orange"} variant={"ghost"}>
-          Sign up
-        </Button>
+        {!userLoading ? (
+          !isLoggedIn ? (
+            <>
+              <Button
+                onClick={onLoginOpen}
+                colorScheme={"orange"}
+                variant={"ghost"}
+              >
+                Log in
+              </Button>
+              <Button
+                onClick={onSignUpOpen}
+                colorScheme={"orange"}
+                variant={"ghost"}
+              >
+                Sign up
+              </Button>
+            </>
+          ) : (
+            <Menu>
+              <MenuButton>
+                <Avatar name={user?.name} src={user?.avatar} size={"md"} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onLogOut}>Log out</MenuItem>
+              </MenuList>
+            </Menu>
+          )
+        ) : null}
         <IconButton
           onClick={toggleColorMode}
           variant={"ghost"}
