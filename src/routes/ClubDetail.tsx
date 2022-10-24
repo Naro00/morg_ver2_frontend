@@ -15,8 +15,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
-import { FaStar } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaList, FaLocationArrow, FaPencilAlt, FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { getClub, getClubReivews } from "../api";
 import ReviewModal from "../components/ReviewModal";
@@ -98,6 +98,32 @@ export default function ClubDetail() {
         <Avatar name={data?.owner.name} size={"lg"} src={data?.owner.avatar} />
       </HStack>
       <Box mt={10}>
+        <Container mt={16} maxW="container.lg" marginX={"none"} pb={10}>
+          <Heading fontSize={"xl"} mb={5}>
+            <Skeleton isLoaded={!isLoading} width={"55%"} height={"30%"}>
+              <HStack>
+                <FaLocationArrow />
+                <Text>Address</Text>
+              </HStack>
+              <Text>{data?.address}</Text>
+            </Skeleton>
+          </Heading>
+        </Container>
+      </Box>
+      <Box mt={10}>
+        <Container mt={16} maxW="container.lg" marginX={"none"} pb={10}>
+          <Heading fontSize={"xl"} mb={5}>
+            <Skeleton isLoaded={!isLoading} width={"55%"} height={"30%"}>
+              <HStack>
+                <FaPencilAlt />
+                <Text>Description</Text>
+              </HStack>
+              <Text>{data?.description}</Text>
+            </Skeleton>
+          </Heading>
+        </Container>
+      </Box>
+      <Box mt={10}>
         <Heading fontSize={"xl"} mb={5}>
           <Skeleton isLoaded={!isLoading} width={"55%"} height={"30px"}>
             <HStack>
@@ -129,7 +155,7 @@ export default function ClubDetail() {
                   </VStack>
                 ))}
               </Grid>
-              <Stack mt={10} width={"60%"}>
+              <Stack mt={10} width={"100%"}>
                 <Button
                   fontSize={"md"}
                   as="b"

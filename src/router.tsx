@@ -4,6 +4,7 @@ import ClubDetail from "./routes/ClubDetail";
 import Home from "./routes/Home";
 import KakaoConfirm from "./routes/KakaoConfirm";
 import NotFound from "./routes/NotFound";
+import UploadClub from "./routes/UploadClub";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "clubs/upload",
+        element: <UploadClub />,
       },
       {
         path: "clubs/:clubPk",
