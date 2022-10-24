@@ -42,7 +42,8 @@ export default function Home() {
         <Club
           key={club.pk}
           pk={club.pk}
-          imageUrl={club.photos[0].file}
+          isOwner={club.is_owner}
+          imageUrl={club.photos[0]?.file}
           name={club.name}
           rating={club.rating}
           city={club.city}

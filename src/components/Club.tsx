@@ -19,6 +19,7 @@ interface IClubProps {
   gu: string;
   price: number;
   pk: number;
+  isOwner: boolean;
 }
 
 export default function Club({
