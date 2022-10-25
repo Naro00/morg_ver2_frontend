@@ -8,6 +8,9 @@ import {
   Heading,
   HStack,
   Image,
+  List,
+  ListIcon,
+  ListItem,
   Skeleton,
   Stack,
   Text,
@@ -16,15 +19,24 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { FaList, FaLocationArrow, FaPencilAlt, FaStar } from "react-icons/fa";
+import {
+  FaHeart,
+  FaList,
+  FaLocationArrow,
+  FaPencilAlt,
+  FaStar,
+} from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { getClub, getClubReivews } from "../api";
+import { getAmenities, getClub, getClubReivews } from "../api";
 import ReviewModal from "../components/ReviewModal";
-import { IClubDetail, IReview } from "../types";
+import { IAmenity, IClubDetail, IReview } from "../types";
 
 export default function ClubDetail() {
   const { clubPk } = useParams();
   const { isLoading, data } = useQuery<IClubDetail>([`clubs`, clubPk], getClub);
+  const { data: amenities, isLoading: isAmenitiesLoading } = useQuery<
+    IAmenity[]
+  >(["amenities"], getAmenities);
   const { isLoading: isReviewLoding, data: reviewData } = useQuery<IReview[]>(
     [`clubs`, clubPk, `reviews`],
     getClubReivews
@@ -65,12 +77,14 @@ export default function ClubDetail() {
             key={index}
           >
             <Skeleton isLoaded={!isLoading} h="100%" w="100%">
-              <Image
-                objectFit={"cover"}
-                w="100%"
-                h="100%"
-                src={data?.photos[index].file}
-              />
+              {data?.photos && data.photos.length > 4 ? (
+                <Image
+                  objectFit={"cover"}
+                  w="100%"
+                  h="100%"
+                  src={data?.photos[index].file}
+                />
+              ) : null}
             </Skeleton>
           </GridItem>
         ))}
@@ -105,7 +119,9 @@ export default function ClubDetail() {
                 <FaLocationArrow />
                 <Text>Address</Text>
               </HStack>
-              <Text>{data?.address}</Text>
+              <Text fontWeight={"normal"} pt={5} fontSize={"md"}>
+                {data?.address}
+              </Text>
             </Skeleton>
           </Heading>
         </Container>
@@ -118,7 +134,33 @@ export default function ClubDetail() {
                 <FaPencilAlt />
                 <Text>Description</Text>
               </HStack>
-              <Text>{data?.description}</Text>
+              <Text fontWeight={"normal"} pt={5} fontSize={"md"}>
+                {data?.description}
+              </Text>
+            </Skeleton>
+          </Heading>
+        </Container>
+      </Box>
+      <Box mt={10}>
+        <Container mt={16} maxW="container.lg" marginX={"none"} pb={10}>
+          <Heading fontSize={"xl"} mb={5}>
+            <Skeleton isLoaded={!isLoading} width={"55%"} height={"30%"}>
+              <HStack>
+                <FaPencilAlt />
+                <Text>Amenities</Text>
+              </HStack>
+              {amenities?.map((amenity) => (
+                <Box pt={5} key={amenity.pk}>
+                  {amenities.length > 0 ? (
+                    <List fontSize={"md"} fontWeight={"normal"} spacing={3}>
+                      <ListItem>
+                        <ListIcon as={FaHeart} color={"orange.300"} />
+                        {amenity.name}
+                      </ListItem>
+                    </List>
+                  ) : null}
+                </Box>
+              ))}
             </Skeleton>
           </Heading>
         </Container>

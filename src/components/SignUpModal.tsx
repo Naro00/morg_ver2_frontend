@@ -29,7 +29,7 @@ interface SignUpModalProps {
 interface Ifrom {
   username: string;
   password: string;
-  password2: string;
+  password1: string;
   email: string;
   name: string;
 }
@@ -46,7 +46,7 @@ const schema = yup.object().shape({
     .min(8, "비밀번호는 최소 8자리 이상입니다.")
     .max(18, "비밀번호는 최대 15자리 입니다.")
     .required("비밀번호는 반드시 입력해주세요."),
-  password2: yup
+  password1: yup
     .string()
     .min(8, "비밀번호는 최소 8자리 이상입니다.")
     .max(18, "비밀번호는 최대 15자리 입니다.")
@@ -73,8 +73,8 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
       reset();
     },
   });
-  const onSubmit = ({ username, password, password2, name, email }: Ifrom) => {
-    mutation.mutate({ username, password, password2, name, email });
+  const onSubmit = ({ username, password, password1, name, email }: Ifrom) => {
+    mutation.mutate({ username, password, password1, name, email });
   };
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
@@ -162,8 +162,8 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                 }
               />
               <Input
-                isInvalid={Boolean(errors.password2?.message)}
-                {...register("password2", {
+                isInvalid={Boolean(errors.password1?.message)}
+                {...register("password1", {
                   required: "Please write a confirm password",
                 })}
                 variant={"filled"}

@@ -41,11 +41,19 @@ export interface IClubOwner {
   }
   
 export interface IAmenity {
+    pk: number;
     name: string;
     description: string;
   }
+
+export interface ICategory {
+   pk: number;
+   name: string;
+   kind: string;
+}
   
 export interface IClubDetail extends IClubList {
+    id: number;
     created_at: string;
     updated_at: string;
     locker_room: number;
@@ -55,10 +63,7 @@ export interface IClubDetail extends IClubList {
     kind: string;
     is_owner: boolean;
     is_liked: boolean;
-    category: {
-      name: string;
-      kind: string;
-    };
+    category: ICategory;
     owner: IClubOwner;
     amenities: IAmenity[];
   }

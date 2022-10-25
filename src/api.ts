@@ -28,7 +28,7 @@ export const LogOut = () => instance.post(`users/log-out`, null, {headers: {"X-C
 
 export const kakaoLogin = (code: string) =>
     instance.post(
-        `/users/kakao`,
+        `users/kakao`,
         { code },
         {
             headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},
@@ -50,7 +50,7 @@ export interface IUsernameLoginError{
 
 export const usernameLogIn = ({username, password,}: IUsernameLoginVariables) =>
     instance.post(
-        `/users/log-in`,
+        `users/log-in`,
         { username, password },
         {
             headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},
@@ -60,15 +60,44 @@ export const usernameLogIn = ({username, password,}: IUsernameLoginVariables) =>
 export interface IUsernameSignupVariables{
         username: string;
         password: string;
-        password2: string;
+        password1: string;
         name: string;
         email: string;
     }
 
-export const userSignUp = ({username, password, password2, name, email }: IUsernameSignupVariables) =>
+export const userSignUp = ({username, password, password1, name, email }: IUsernameSignupVariables) =>
     instance.post(
-        `users/sign-up`,
-        { username, password, password2, name, email },
+        `users/`,
+        { username, password, password1, name, email },
+        {
+            headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},
+        }
+    ).then((response) => response.data);
+
+export const getAmenities = () =>
+instance.get(`clubs/amenities`).then((response) => response.data);
+
+export const getCategories = () =>
+instance.get(`categories/`).then((response) => response.data);
+
+export interface IUploadClubVariables {
+name: string;
+  city: string;
+  gu: string;
+  price: number;
+  locker_room: number;
+  toilets: number;
+  description: string;
+  address: string;
+  kind: string;
+  amenities: number[];
+  category: number;
+}
+
+export const uploadClub = (variables: IUploadClubVariables) =>
+    instance.post(
+        `clubs/`,
+        variables,
         {
             headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},
         }

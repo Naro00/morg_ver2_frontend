@@ -36,7 +36,11 @@ export default function Club({
     <Link to={`/clubs/${pk}`}>
       <VStack alignItems={"flex-start"}>
         <Box position={"relative"} overflow={"hidden"} mb={3} rounded="xl">
-          <Image minH="280" src={imageUrl} />
+          {imageUrl ? (
+            <Image minH="280" src={imageUrl} />
+          ) : (
+            <Box minH={"280px"} h="100%" w={"100%"} p={10} bg="green.400" />
+          )}
           <Button
             variant={"unstyled"}
             position={"absolute"}
