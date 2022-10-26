@@ -1,7 +1,9 @@
 export interface IReview {
     payload: string,
     rating: number,
-    user: IClubOwner
+    user: IClubOwner,
+    clubPk: string,
+    id: number,
 }
 
 export interface IClubPhotoPhoto {
@@ -66,4 +68,5 @@ export interface IClubDetail extends IClubList {
     category: ICategory;
     owner: IClubOwner;
     amenities: IAmenity[];
+    reviews : IReview[];
   }

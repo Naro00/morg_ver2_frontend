@@ -5,6 +5,7 @@ import Home from "./routes/Home";
 import KakaoConfirm from "./routes/KakaoConfirm";
 import NotFound from "./routes/NotFound";
 import UploadClub from "./routes/UploadClub";
+import UploadPhotos from "./routes/UploadPhotos";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "clubs/:clubPk",
         element: <ClubDetail />,
+      },
+      {
+        path: "clubs/:clubPk/photos",
+        element: <UploadPhotos />,
       },
       {
         path: "social",

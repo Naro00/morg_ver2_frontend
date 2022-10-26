@@ -3,6 +3,8 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormHelperText,
   Grid,
   GridItem,
   Heading,
@@ -11,13 +13,21 @@ import {
   List,
   ListIcon,
   ListItem,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Skeleton,
   Stack,
   Text,
+  Textarea,
   useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
   FaHeart,
@@ -26,10 +36,11 @@ import {
   FaPencilAlt,
   FaStar,
 } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAmenities, getClub, getClubReivews } from "../api";
 import ReviewModal from "../components/ReviewModal";
 import { IAmenity, IClubDetail, IReview } from "../types";
+import ReviewPost from "../components/Review";
 
 export default function ClubDetail() {
   const { clubPk } = useParams();
@@ -149,9 +160,9 @@ export default function ClubDetail() {
                 <FaPencilAlt />
                 <Text>Amenities</Text>
               </HStack>
-              {amenities?.map((amenity) => (
+              {data?.amenities.map((amenity) => (
                 <Box pt={5} key={amenity.pk}>
-                  {amenities.length > 0 ? (
+                  {data?.amenities.length > 0 ? (
                     <List fontSize={"md"} fontWeight={"normal"} spacing={3}>
                       <ListItem>
                         <ListIcon as={FaHeart} color={"orange.300"} />
@@ -197,8 +208,10 @@ export default function ClubDetail() {
                   </VStack>
                 ))}
               </Grid>
+              <ReviewPost />
               <Stack mt={10} width={"100%"}>
                 <Button
+                  colorScheme={"yellow"}
                   fontSize={"md"}
                   as="b"
                   ref={btnRef}

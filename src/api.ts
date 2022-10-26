@@ -1,6 +1,7 @@
 import Cookie from "js-cookie";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
+import { IClubDetail, IClubOwner, IReview } from "./types";
 
 
 const instance = axios.create({
@@ -20,6 +21,20 @@ export const getClubReivews = ({ queryKey }: QueryFunctionContext) => {
     const [_, clubPk] = queryKey;
     return instance.get(`clubs/${clubPk}/reviews`).then((response) => response.data);
 };
+
+export interface IpostReviewVariables {
+    payload: string,
+    rating: number,
+    user: IClubOwner,
+    clubPk: string,
+}
+
+export const postClubReview = ({payload, rating, user, clubPk,}: IpostReviewVariables) =>
+    instance.post(
+        `clubs/${clubPk}/reviews`,
+        { payload, rating, user },
+        {headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},}
+    ).then((response) => response.data)
 
 export const getMe = () =>
     instance.get(`users/me/`).then((response) => response.data);

@@ -8,8 +8,9 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FaStar, FaRegHeart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React from "react";
+import { FaStar, FaRegHeart, FaCamera } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 interface IClubProps {
   imageUrl: string;
@@ -30,8 +31,14 @@ export default function Club({
   city,
   gu,
   price,
+  isOwner,
 }: IClubProps) {
   const gray = useColorModeValue("gray.600", "gray.300");
+  const navigate = useNavigate();
+  const onCameraClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    navigate(`/clubs/${pk}/photos`);
+  };
   return (
     <Link to={`/clubs/${pk}`}>
       <VStack alignItems={"flex-start"}>
@@ -47,8 +54,9 @@ export default function Club({
             top={0}
             right={0}
             color="white"
+            onClick={onCameraClick}
           >
-            <FaRegHeart size="20px" />
+            {isOwner ? <FaCamera size={"20px"} /> : <FaRegHeart size="20px" />}
           </Button>
         </Box>
         <Box>
