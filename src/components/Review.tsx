@@ -9,18 +9,25 @@ import {
   NumberInputField,
   NumberInputStepper,
   Stack,
+  Text,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import userEvent from "@testing-library/user-event";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { IpostReviewVariables, postClubReview } from "../api";
-import { IReview } from "../types";
+import {
+  getClub,
+  getClubReivews,
+  IpostReviewVariables,
+  postClubReview,
+} from "../api";
+import { IClubDetail, IReview } from "../types";
 
 export default function ReviewPost() {
-  const { register, handleSubmit, reset } = useForm<IReview>();
   const { clubPk } = useParams();
+  const { register, handleSubmit, reset } = useForm<IpostReviewVariables>();
   const toast = useToast();
   const navigate = useNavigate();
   const mutation = useMutation(postClubReview, {
@@ -30,21 +37,27 @@ export default function ReviewPost() {
         title: "Review uploaded",
         position: "bottom-right",
       });
-      navigate(`/clubs/${clubPk}`);
+      reset();
     },
   });
-  const onSubmit = (data: IpostReviewVariables) => {
-    mutation.mutate(data);
+  const onSubmit = ({
+    payload,
+    rating,
+    user,
+    clubPk,
+  }: IpostReviewVariables) => {
+    mutation.mutate({ payload, rating, user, clubPk });
   };
   return (
     <Box>
       <Stack mt={10} width={"100%"} as="form" onSubmit={handleSubmit(onSubmit)}>
-        <FormControl {...register("rating")}>
+        <Text>{}</Text>
+        <FormControl>
           <FormHelperText fontSize={"xs"}>
             클럽 활동에 대해서 얼마나 만족하시나요?
           </FormHelperText>
           <NumberInput size={"sm"} w={"40%"} defaultValue={1} min={1} max={5}>
-            <NumberInputField />
+            <NumberInputField {...register("rating")} />
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />

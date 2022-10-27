@@ -32,7 +32,7 @@ export interface IpostReviewVariables {
 export const postClubReview = ({payload, rating, user, clubPk,}: IpostReviewVariables) =>
     instance.post(
         `clubs/${clubPk}/reviews`,
-        { payload, rating, user },
+        { payload, rating, user},
         {headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},}
     ).then((response) => response.data)
 
@@ -96,7 +96,7 @@ export const getCategories = () =>
 instance.get(`categories/`).then((response) => response.data);
 
 export interface IUploadClubVariables {
-name: string;
+  name: string;
   city: string;
   gu: string;
   price: number;

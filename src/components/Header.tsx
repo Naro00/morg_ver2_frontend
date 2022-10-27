@@ -1,6 +1,7 @@
 import { FaMoon } from "react-icons/fa";
 import { TbLetterM } from "react-icons/tb";
 import { BsSunFill } from "react-icons/bs";
+import { MdGolfCourse } from "react-icons/md";
 import {
   Avatar,
   Box,
@@ -84,7 +85,7 @@ export default function Header() {
     >
       <Box color="orange.500">
         <Link to={"/"}>
-          <TbLetterM size={48} />
+          <MdGolfCourse size={48} />
         </Link>
       </Box>
       <HStack spacing={2}>

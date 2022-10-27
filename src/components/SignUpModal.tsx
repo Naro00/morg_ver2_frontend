@@ -4,6 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
+  FormControl,
+  FormHelperText,
   Input,
   InputGroup,
   InputLeftElement,
@@ -13,13 +15,17 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaUserAstronaut, FaLock, FaEnvelope } from "react-icons/fa";
 import SocialLogin from "./socialLogin";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isError, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userSignUp } from "../api";
+import { MdPassword, MdSentimentSatisfiedAlt } from "react-icons/md";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -36,21 +42,24 @@ interface Ifrom {
 
 const schema = yup.object().shape({
   name: yup.string().required("이름은 반드시 입력해주세요."),
-  username: yup.string().required("Username은 반드시 입력해주세요."),
+  username: yup.string().required("아이디는 반드시 입력해주세요."),
   email: yup
     .string()
     .email("이메일 형식이 적합하지 않습니다.")
     .required("이메일은 반드시 입력해주세요."),
   password: yup
     .string()
+    .matches(
+      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+      "비밀번호는 8자 이상이어야 하고, 하나 이상의 영문 대문자, 숫자와 특수문자를 포함해야 합니다."
+    )
     .min(8, "비밀번호는 최소 8자리 이상입니다.")
     .max(18, "비밀번호는 최대 15자리 입니다.")
     .required("비밀번호는 반드시 입력해주세요."),
   password1: yup
     .string()
-    .min(8, "비밀번호는 최소 8자리 이상입니다.")
-    .max(18, "비밀번호는 최대 15자리 입니다.")
-    .required("비밀번호 확인은 반드시 입력해주세요."),
+    .required("비밀번호 확인은 반드시 입력해주세요.")
+    .oneOf([yup.ref("password"), null], "Passwords don't match."),
 });
 
 export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
@@ -60,6 +69,7 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
     formState: { errors },
     reset,
   } = useForm<Ifrom>({ resolver: yupResolver(schema), mode: "onChange" });
+  const [error, setError] = useState(null);
   const toast = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation(userSignUp, {
@@ -76,6 +86,7 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
   const onSubmit = ({ username, password, password1, name, email }: Ifrom) => {
     mutation.mutate({ username, password, password1, name, email });
   };
+
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -101,6 +112,20 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                 placeholder="Name"
               />
             </InputGroup>
+            <VStack>
+              <Box>
+                {errors.name && (
+                  <Text
+                    pr={40}
+                    color={"red.600"}
+                    fontSize={"smaller"}
+                    fontWeight={"thin"}
+                  >
+                    {errors.name.message}
+                  </Text>
+                )}
+              </Box>
+            </VStack>
             <InputGroup>
               <InputLeftElement
                 children={
@@ -118,6 +143,20 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                 placeholder="Email"
               />
             </InputGroup>
+            <VStack>
+              <Box>
+                {errors.email && (
+                  <Text
+                    pr={40}
+                    color={"red.600"}
+                    fontSize={"smaller"}
+                    fontWeight={"thin"}
+                  >
+                    {errors.email.message}
+                  </Text>
+                )}
+              </Box>
+            </VStack>
             <InputGroup size={"md"}>
               <InputLeftElement
                 children={
@@ -132,9 +171,23 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                   required: "Please write a username",
                 })}
                 variant={"filled"}
-                placeholder="Username"
+                placeholder="ID"
               />
             </InputGroup>
+            <VStack>
+              <Box>
+                {errors.username && (
+                  <Text
+                    pr={40}
+                    color={"red.600"}
+                    fontSize={"smaller"}
+                    fontWeight={"thin"}
+                  >
+                    {errors.username.message}
+                  </Text>
+                )}
+              </Box>
+            </VStack>
             <InputGroup>
               <InputLeftElement
                 children={
@@ -153,6 +206,20 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                 type="password"
               />
             </InputGroup>
+            <VStack>
+              <Box>
+                {errors.password && (
+                  <Text
+                    pr={40}
+                    color={"red.600"}
+                    fontSize={"smaller"}
+                    fontWeight={"thin"}
+                  >
+                    {errors.password.message}
+                  </Text>
+                )}
+              </Box>
+            </VStack>
             <InputGroup>
               <InputLeftElement
                 children={
@@ -171,6 +238,20 @@ export default function SingUpModal({ isOpen, onClose }: SignUpModalProps) {
                 type="password"
               />
             </InputGroup>
+            <VStack>
+              <Box>
+                {errors.password1 && (
+                  <Text
+                    pr={40}
+                    color={"red.600"}
+                    fontSize={"smaller"}
+                    fontWeight={"thin"}
+                  >
+                    {errors.password1.message}
+                  </Text>
+                )}
+              </Box>
+            </VStack>
           </VStack>
           <Button
             isLoading={mutation.isLoading}

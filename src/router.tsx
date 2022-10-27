@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import ReviewPost from "./components/Review";
 import Root from "./components/Root";
 import ClubDetail from "./routes/ClubDetail";
 import Home from "./routes/Home";
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "clubs/:clubPk",
         element: <ClubDetail />,
+      },
+      {
+        path: "clubs/:clubPk/reviews",
+        element: <ReviewPost />,
       },
       {
         path: "clubs/:clubPk/photos",

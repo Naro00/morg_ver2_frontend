@@ -36,6 +36,7 @@ import {
   FaPencilAlt,
   FaStar,
 } from "react-icons/fa";
+import { MdCheckCircle } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAmenities, getClub, getClubReivews } from "../api";
 import ReviewModal from "../components/ReviewModal";
@@ -68,11 +69,11 @@ export default function ClubDetail() {
         lg: 19,
       }}
     >
-      <Skeleton height={"43px"} width="30%" isLoaded={!isLoading}>
+      <Skeleton height={"43px"} width="40%" isLoaded={!isLoading}>
         <Heading>{data?.name}</Heading>
       </Skeleton>
       <Grid
-        mt={8}
+        mt={20}
         rounded={"xl"}
         overflow={"hidden"}
         gap={2}
@@ -80,12 +81,12 @@ export default function ClubDetail() {
         templateRows={"1fr 1fr"}
         templateColumns={"repeat(4, 1fr)"}
       >
-        {[0, 1, 2, 3, 4].map((index) => (
+        {data?.photos.slice(0, 5).map((photos, index) => (
           <GridItem
             colSpan={index === 0 ? 2 : 1}
             rowSpan={index === 0 ? 2 : 1}
             overflow={"hidden"}
-            key={index}
+            key={photos.pk}
           >
             <Skeleton isLoaded={!isLoading} h="100%" w="100%">
               {data?.photos && data.photos.length > 4 ? (
@@ -145,9 +146,16 @@ export default function ClubDetail() {
                 <FaPencilAlt />
                 <Text>Description</Text>
               </HStack>
-              <Text fontWeight={"normal"} pt={5} fontSize={"md"}>
-                {data?.description}
-              </Text>
+              <List spacing={3}>
+                <ListItem fontWeight={"normal"} pt={5} fontSize={"md"}>
+                  <ListIcon as={MdCheckCircle} color="green.500" />
+                  {data?.description}
+                </ListItem>
+                <ListItem fontWeight={"normal"} pt={5} fontSize={"md"}>
+                  <ListIcon as={MdCheckCircle} color="green.500" />
+                  운영시간 : {data?.open_time} to {data?.close_time}
+                </ListItem>
+              </List>
             </Skeleton>
           </Heading>
         </Container>
@@ -158,7 +166,7 @@ export default function ClubDetail() {
             <Skeleton isLoaded={!isLoading} width={"55%"} height={"30%"}>
               <HStack>
                 <FaPencilAlt />
-                <Text>Amenities</Text>
+                <Text>Amenities & Facilities</Text>
               </HStack>
               {data?.amenities.map((amenity) => (
                 <Box pt={5} key={amenity.pk}>
